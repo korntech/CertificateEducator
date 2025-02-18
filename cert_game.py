@@ -1,10 +1,12 @@
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.panel import Panel
+import tkinter as tk
 from modules.certificate import Certificate, CertificateChain
 from modules.visualizer import CertificateVisualizer
 from modules.scenarios import Scenarios
 from modules.quiz import QuizManager
+from modules.gui import CertificateAuthorityGUI
 import sys
 import argparse
 
@@ -154,8 +156,28 @@ def run_scenario(scenario_num, non_interactive=False):
             console.print("\n[bold]Press Enter to continue...[/bold]")
             input()
 
+def run_cli():
+    show_welcome()
+    while True:
+        choice = show_menu()
+        if choice == "7":
+            console.print("\n[bold green]Thank you for using the CA Certificate Learning Tool![/bold green]")
+            break
+        elif choice == "6":
+            quiz = QuizManager()
+            quiz.run_quiz(non_interactive=False)
+        else:
+            run_scenario(choice)
+
+def run_gui():
+    root = tk.Tk()
+    app = CertificateAuthorityGUI(root)
+    root.mainloop()
+
 def main():
     parser = argparse.ArgumentParser(description='CA Certificate Learning Tool')
+    parser.add_argument('--cli', action='store_true',
+                       help='Run in command-line interface mode')
     parser.add_argument('--scenario', type=str, choices=['1', '2', '3', '4', '5'],
                        help='Run a specific scenario non-interactively')
     parser.add_argument('--quiz', action='store_true',
@@ -163,7 +185,7 @@ def main():
     args = parser.parse_args()
 
     try:
-        # Non-interactive mode
+        # Non-interactive CLI mode
         if args.scenario:
             run_scenario(args.scenario, non_interactive=True)
             return
@@ -172,18 +194,12 @@ def main():
             quiz.run_quiz(non_interactive=True)
             return
 
-        # Interactive mode
-        show_welcome()
-        while True:
-            choice = show_menu()
-            if choice == "7":
-                console.print("\n[bold green]Thank you for using the CA Certificate Learning Tool![/bold green]")
-                break
-            elif choice == "6":
-                quiz = QuizManager()
-                quiz.run_quiz(non_interactive=False)
-            else:
-                run_scenario(choice)
+        # CLI mode
+        if args.cli:
+            run_cli()
+        # GUI mode (default)
+        else:
+            run_gui()
 
     except KeyboardInterrupt:
         console.print("\n[bold yellow]Program terminated by user.[/bold yellow]")
