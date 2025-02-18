@@ -1,12 +1,10 @@
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.panel import Panel
-import tkinter as tk
 from modules.certificate import Certificate, CertificateChain
 from modules.visualizer import CertificateVisualizer
 from modules.scenarios import Scenarios
 from modules.quiz import QuizManager
-from modules.gui import CertificateAuthorityGUI
 import sys
 import argparse
 
@@ -144,7 +142,7 @@ def run_scenario(scenario_num, non_interactive=False):
         result, message = chain.validate(trust_server_certificate)
         visualizer.show_validation_result(result, message)
 
-        if scenario_num in ["4", "5"] and not non_interactive:
+        if not non_interactive and scenario_num in ["4", "5"]:
             console.print("\n[yellow]Running validation with trustServerCertificate=false[/yellow]")
             result, message = chain.validate(False)
             visualizer.show_validation_result(result, message)
@@ -156,28 +154,8 @@ def run_scenario(scenario_num, non_interactive=False):
             console.print("\n[bold]Press Enter to continue...[/bold]")
             input()
 
-def run_cli():
-    show_welcome()
-    while True:
-        choice = show_menu()
-        if choice == "7":
-            console.print("\n[bold green]Thank you for using the CA Certificate Learning Tool![/bold green]")
-            break
-        elif choice == "6":
-            quiz = QuizManager()
-            quiz.run_quiz(non_interactive=False)
-        else:
-            run_scenario(choice)
-
-def run_gui():
-    root = tk.Tk()
-    app = CertificateAuthorityGUI(root)
-    root.mainloop()
-
 def main():
     parser = argparse.ArgumentParser(description='CA Certificate Learning Tool')
-    parser.add_argument('--cli', action='store_true',
-                       help='Run in command-line interface mode')
     parser.add_argument('--scenario', type=str, choices=['1', '2', '3', '4', '5'],
                        help='Run a specific scenario non-interactively')
     parser.add_argument('--quiz', action='store_true',
@@ -185,21 +163,25 @@ def main():
     args = parser.parse_args()
 
     try:
-        # Non-interactive CLI mode
         if args.scenario:
             run_scenario(args.scenario, non_interactive=True)
             return
         elif args.quiz:
             quiz = QuizManager()
-            quiz.run_quiz(non_interactive=True)
+            quiz.run_quiz(non_interactive=True) 
             return
 
-        # CLI mode
-        if args.cli:
-            run_cli()
-        # GUI mode (default)
-        else:
-            run_gui()
+        show_welcome()
+        while True:
+            choice = show_menu()
+            if choice == "7":
+                console.print("\n[bold green]Thank you for using the CA Certificate Learning Tool![/bold green]")
+                break
+            elif choice == "6":
+                quiz = QuizManager()
+                quiz.run_quiz(non_interactive=False)
+            else:
+                run_scenario(choice)
 
     except KeyboardInterrupt:
         console.print("\n[bold yellow]Program terminated by user.[/bold yellow]")
