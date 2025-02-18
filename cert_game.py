@@ -30,9 +30,10 @@ def show_menu():
     console.print("2. Expired Certificate Scenario")
     console.print("3. Broken Certificate Chain")
     console.print("4. Trust Server Certificate Flag Demo")
-    console.print("5. Exit")
+    console.print("5. Man-in-the-Middle Attack Scenario")
+    console.print("6. Exit")
 
-    return Prompt.ask("\nSelect a scenario", choices=["1", "2", "3", "4", "5"])
+    return Prompt.ask("\nSelect a scenario", choices=["1", "2", "3", "4", "5", "6"])
 
 def explain_scenario(scenario_num):
     explanations = {
@@ -74,6 +75,16 @@ def explain_scenario(scenario_num):
         - With trustServerCertificate=true, only dates are checked
         - [red]WARNING:[/red] Using this flag bypasses important security checks
         - Common in development but [red]dangerous in production[/red]
+        """,
+        "5": """
+        [bold]Man-in-the-Middle Attack Scenario[/bold]
+
+        This scenario demonstrates the dangers of using trustServerCertificate:
+        - Shows how an attacker can intercept traffic
+        - Demonstrates why chain validation is crucial
+        - Visualizes the security risks of bypassing validation
+        - [red]WARNING:[/red] Real-world implications of insecure settings
+        - Explains how proper certificate validation prevents attacks
         """
     }
 
@@ -86,6 +97,7 @@ def run_scenario(scenario_num, non_interactive=False):
 
         chain = None
         trust_server_certificate = False
+        show_mitm = False
 
         if scenario_num == "1":
             chain = Scenarios.get_basic_chain()
@@ -96,25 +108,29 @@ def run_scenario(scenario_num, non_interactive=False):
         elif scenario_num == "4":
             chain = Scenarios.get_untrusted_chain()
             trust_server_certificate = True
+        elif scenario_num == "5":
+            chain = Scenarios.get_mitm_attack_chain()
+            trust_server_certificate = True
+            show_mitm = True
 
         if chain is None:
             console.print("[red]Error: Failed to create certificate chain[/red]")
             return
 
         visualizer = CertificateVisualizer()
-        visualizer.draw_chain(chain)
+        visualizer.draw_chain(chain, show_mitm)
 
         if not non_interactive:
             console.print("\n[bold]Press Enter to validate the certificate chain...[/bold]")
             input()
 
-        if scenario_num == "4":
+        if scenario_num in ["4", "5"]:
             console.print("\n[yellow]Running validation with trustServerCertificate=true[/yellow]")
 
         result, message = chain.validate(trust_server_certificate)
         visualizer.show_validation_result(result, message)
 
-        if scenario_num == "4" and not non_interactive:
+        if scenario_num in ["4", "5"] and not non_interactive:
             console.print("\n[yellow]Running validation with trustServerCertificate=false[/yellow]")
             result, message = chain.validate(False)
             visualizer.show_validation_result(result, message)
@@ -128,7 +144,7 @@ def run_scenario(scenario_num, non_interactive=False):
 
 def main():
     parser = argparse.ArgumentParser(description='CA Certificate Learning Tool')
-    parser.add_argument('--scenario', type=str, choices=['1', '2', '3', '4'],
+    parser.add_argument('--scenario', type=str, choices=['1', '2', '3', '4', '5'],
                        help='Run a specific scenario non-interactively')
     args = parser.parse_args()
 
@@ -142,7 +158,7 @@ def main():
         show_welcome()
         while True:
             choice = show_menu()
-            if choice == "5":
+            if choice == "6":
                 console.print("\n[bold green]Thank you for using the CA Certificate Learning Tool![/bold green]")
                 break
             run_scenario(choice)

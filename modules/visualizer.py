@@ -6,7 +6,7 @@ console = Console()
 
 class CertificateVisualizer:
     @staticmethod
-    def draw_chain(chain):
+    def draw_chain(chain, show_mitm=False):
         if not chain or not chain.certificates:
             console.print("\n[yellow]Warning: No certificates to display[/yellow]")
             return
@@ -16,6 +16,27 @@ class CertificateVisualizer:
         # Display certificates in correct order (leaf at bottom)
         certs = list(reversed(chain.certificates))
 
+        if show_mitm:
+            console.print("\n[bold red]⚠️  SECURITY RISK: Man-in-the-Middle Attack Scenario[/bold red]")
+            console.print("[red]When trustServerCertificate=true, traffic can be intercepted:[/red]")
+
+            # Draw the client
+            console.print("\nClient")
+            console.print("┌" + "─" * 40 + "┐")
+            console.print("│ Secure Connection Expected              │")
+            console.print("└" + "─" * 40 + "┘")
+            console.print("         │")
+            console.print("         ▼")
+
+            # Draw the attacker
+            console.print("[bold red]Malicious Interceptor[/bold red]")
+            console.print("┌" + "─" * 40 + "┐")
+            console.print("│ ⚠️  Traffic Being Intercepted           │")
+            console.print("└" + "─" * 40 + "┘")
+            console.print("         │")
+            console.print("         ▼")
+
+        # Draw the certificate chain
         for i, cert in enumerate(certs):
             try:
                 # Create certificate box
@@ -35,6 +56,16 @@ class CertificateVisualizer:
                     console.print("         ▲")
             except Exception as e:
                 console.print(f"[red]Error displaying certificate {i+1}: {str(e)}[/red]")
+
+        if show_mitm:
+            console.print("\n[bold red]Security Impact:[/bold red]")
+            console.print("• Attacker can read all traffic")
+            console.print("• Sensitive data can be stolen")
+            console.print("• Actions can be modified")
+            console.print("\n[bold yellow]Prevention:[/bold yellow]")
+            console.print("• Never use trustServerCertificate=true in production")
+            console.print("• Always validate the full certificate chain")
+            console.print("• Keep root CA certificates up to date")
 
     @staticmethod
     def show_validation_result(result, message):
