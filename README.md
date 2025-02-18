@@ -1,18 +1,3 @@
-# CA Certificate Learning Tool 🔐
-
-An interactive Python-based educational tool for learning about CA (Certificate Authority) certificates and trust chains. This tool helps developers and security professionals understand how certificate chains work in real-world scenarios.
-
-## Features 🌟
-
-- Interactive scenarios demonstrating different certificate chain configurations
-- Visual representation of certificate chains and relationships
-- Real-time validation checking
-- Educational explanations for each scenario
-- Support for both interactive and non-interactive modes
-
-## Certificate Chain Visualization Example
-
-```
 Root CA
 ┌────────────────────────────────────────┐
 │ Subject: Root CA                        │
@@ -43,6 +28,32 @@ example.com
 └────────────────────────────────────────┘
 ```
 
+### Broken Chain Example
+```
+Root CA
+┌────────────────────────────────────────┐
+│ Subject: Root CA                        │
+│ Issuer: Root CA                         │
+│ Type: Root                              │
+└────────────────────────────────────────┘
+         ▲
+         │
+Intermediate CA
+┌────────────────────────────────────────┐
+│ Subject: Intermediate CA                │
+│ Issuer: Root CA                         │
+│ Type: Intermediate                      │
+└────────────────────────────────────────┘
+         ╳  (Chain broken - wrong issuer)
+         │
+wrong.example.com
+┌────────────────────────────────────────┐
+│ Subject: wrong.example.com              │
+│ Issuer: Wrong Issuer                    │
+│ Type: Leaf                              │
+└────────────────────────────────────────┘
+```
+
 ## Installation 🚀
 
 1. Clone the repository
@@ -53,14 +64,26 @@ pip install rich
 
 ## Usage 💻
 
-Run the tool in interactive mode:
+### Interactive Mode
+Run the tool with full interactive interface:
 ```bash
 python cert_game.py
 ```
 
-Run a specific scenario directly:
+### Non-interactive Mode
+Run specific scenarios directly:
 ```bash
+# Run basic valid chain scenario
 python cert_game.py --scenario 1
+
+# Run expired certificate scenario
+python cert_game.py --scenario 2
+
+# Run broken chain scenario
+python cert_game.py --scenario 3
+
+# Run trust server certificate demo
+python cert_game.py --scenario 4
 ```
 
 ## Available Scenarios 📚
@@ -84,6 +107,7 @@ python cert_game.py --scenario 1
    - Demonstrates the implications of trustServerCertificate flag
    - Shows security risks of bypassing chain validation
    - Important for development vs. production considerations
+   - ⚠️ WARNING: Using trustServerCertificate=true in production is dangerous!
 
 ## Educational Value 📖
 
@@ -101,26 +125,10 @@ This tool helps users understand:
 - Modular design for easy scenario additions
 - Support for both interactive and automated usage
 
-## Development 🔧
-
-The project structure:
+## Project Structure 📁
 ```
 ├── modules/
 │   ├── certificate.py    # Core certificate logic
 │   ├── scenarios.py      # Different certificate scenarios
 │   └── visualizer.py     # Chain visualization
 └── cert_game.py          # Main application
-```
-
-## Contributing 🤝
-
-Contributions are welcome! Some areas for potential enhancement:
-- Additional certificate scenarios
-- Enhanced visualizations
-- More detailed validation checks
-- GUI interface implementation
-- Network simulation features
-
-## License 📄
-
-MIT License - feel free to use and modify for your educational needs.

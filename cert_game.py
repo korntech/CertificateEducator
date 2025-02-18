@@ -81,7 +81,8 @@ def explain_scenario(scenario_num):
 
 def run_scenario(scenario_num, non_interactive=False):
     try:
-        explain_scenario(scenario_num)
+        if not non_interactive:
+            explain_scenario(scenario_num)
 
         chain = None
         trust_server_certificate = False
@@ -100,10 +101,6 @@ def run_scenario(scenario_num, non_interactive=False):
             console.print("[red]Error: Failed to create certificate chain[/red]")
             return
 
-        if not non_interactive:
-            console.print("\n[bold]Press Enter to visualize the certificate chain...[/bold]")
-            input()
-
         visualizer = CertificateVisualizer()
         visualizer.draw_chain(chain)
 
@@ -117,7 +114,7 @@ def run_scenario(scenario_num, non_interactive=False):
         result, message = chain.validate(trust_server_certificate)
         visualizer.show_validation_result(result, message)
 
-        if scenario_num == "4":
+        if scenario_num == "4" and not non_interactive:
             console.print("\n[yellow]Running validation with trustServerCertificate=false[/yellow]")
             result, message = chain.validate(False)
             visualizer.show_validation_result(result, message)
@@ -136,8 +133,8 @@ def main():
     args = parser.parse_args()
 
     try:
+        # Non-interactive mode - skip welcome and menu
         if args.scenario:
-            # Non-interactive mode - skip welcome screen
             run_scenario(args.scenario, non_interactive=True)
             return
 
