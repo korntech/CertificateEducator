@@ -137,7 +137,7 @@ def main():
 
     try:
         if args.scenario:
-            # Non-interactive mode
+            # Non-interactive mode - skip welcome screen
             run_scenario(args.scenario, non_interactive=True)
             return
 

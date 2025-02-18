@@ -10,7 +10,7 @@ class Certificate:
     valid_to: datetime
     is_root: bool
     serial_number: str
-    
+
     @classmethod
     def create_root_ca(cls, name="Root CA"):
         now = datetime.now()
@@ -22,7 +22,7 @@ class Certificate:
             is_root=True,
             serial_number=str(uuid.uuid4())
         )
-    
+
     @classmethod
     def create_intermediate(cls, issuer, name="Intermediate CA"):
         now = datetime.now()
@@ -34,7 +34,7 @@ class Certificate:
             is_root=False,
             serial_number=str(uuid.uuid4())
         )
-    
+
     @classmethod
     def create_leaf(cls, issuer, name="example.com"):
         now = datetime.now()
@@ -79,7 +79,9 @@ class CertificateChain:
             if current.issuer != issuer.subject:
                 return False, f"Invalid issuer: {current.subject} not issued by {issuer.subject}"
 
-            if not issuer.is_root and i == len(self.certificates) - 2:
-                return False, "Chain doesn't end with a root certificate"
+        # Check if the last certificate is a root CA
+        if not self.certificates[-1].is_root:
+            return False, "Chain doesn't end with a trusted root certificate"
 
+        # If we got here, the chain is valid
         return True, "Valid certificate chain"

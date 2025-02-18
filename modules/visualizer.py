@@ -20,8 +20,8 @@ class CertificateVisualizer:
                 console.print("┌" + "─" * 40 + "┐")
                 console.print(f"│ Subject: {cert.subject:<30} │")
                 console.print(f"│ Issuer: {cert.issuer:<31} │")
-                console.print(f"│ Valid From: {cert.valid_from.date():<27} │")
-                console.print(f"│ Valid To: {cert.valid_to.date():<29} │")
+                console.print(f"│ Valid From: {cert.valid_from.strftime('%Y-%m-%d'):<27} │")
+                console.print(f"│ Valid To: {cert.valid_to.strftime('%Y-%m-%d'):<29} │")
                 console.print(f"│ Type: {'Root' if cert.is_root else 'Intermediate' if i < len(chain.certificates)-1 else 'Leaf':<33} │")
                 console.print("└" + "─" * 40 + "┘")
 
