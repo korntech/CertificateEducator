@@ -11,6 +11,17 @@ import argparse
 console = Console()
 
 def show_welcome():
+    ascii_art = """[bold green]
+    ╔═══════════════════════════════════════════════╗
+    ║  [bold red]🔒 CERTIFICATE AUTHORITY LEARNING TOOL 🔒[/bold red]  ║
+    ╠═══════════════════════════════════════════════╣
+    ║     [cyan]┌─────────┐[/cyan]     [yellow]SECURE[/yellow]     [cyan]┌─────────┐[/cyan]     ║
+    ║     [cyan]│ R00T CA │[/cyan]  [yellow]>>VERIFY>>[/yellow]  [cyan]│  LEAF   │[/cyan]     ║
+    ║     [cyan]└─────────┘[/cyan]     [yellow]TRUST[/yellow]     [cyan]└─────────┘[/cyan]     ║
+    ║                                               ║
+    ║     [bold blue]< Learn • Verify • Secure >[/bold blue]        ║
+    ╚═══════════════════════════════════════════════╝[/bold green]
+    """
     welcome_text = """
     Welcome to the Certificate Authority (CA) Learning Tool!
 
@@ -23,7 +34,8 @@ def show_welcome():
 
     Use this tool to explore different certificate scenarios and learn about PKI.
     """
-    console.print(Panel(welcome_text, title="CA Certificate Learning Tool", border_style="cyan"))
+    console.print(ascii_art)
+    console.print(Panel(welcome_text, title="About", border_style="cyan"))
 
 def show_menu():
     console.print("\n[bold cyan]Available Options:[/bold cyan]")
