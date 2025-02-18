@@ -4,6 +4,7 @@ from rich.panel import Panel
 from modules.certificate import Certificate, CertificateChain
 from modules.visualizer import CertificateVisualizer
 from modules.scenarios import Scenarios
+from modules.quiz import QuizManager
 import sys
 import argparse
 
@@ -25,15 +26,16 @@ def show_welcome():
     console.print(Panel(welcome_text, title="CA Certificate Learning Tool", border_style="cyan"))
 
 def show_menu():
-    console.print("\n[bold cyan]Available Scenarios:[/bold cyan]")
+    console.print("\n[bold cyan]Available Options:[/bold cyan]")
     console.print("1. Basic Valid Certificate Chain")
     console.print("2. Expired Certificate Scenario")
     console.print("3. Broken Certificate Chain")
     console.print("4. Trust Server Certificate Flag Demo")
     console.print("5. Man-in-the-Middle Attack Scenario")
-    console.print("6. Exit")
+    console.print("6. Take PKI Knowledge Quiz")
+    console.print("7. Exit")
 
-    return Prompt.ask("\nSelect a scenario", choices=["1", "2", "3", "4", "5", "6"])
+    return Prompt.ask("\nSelect an option", choices=["1", "2", "3", "4", "5", "6", "7"])
 
 def explain_scenario(scenario_num):
     explanations = {
@@ -146,22 +148,32 @@ def main():
     parser = argparse.ArgumentParser(description='CA Certificate Learning Tool')
     parser.add_argument('--scenario', type=str, choices=['1', '2', '3', '4', '5'],
                        help='Run a specific scenario non-interactively')
+    parser.add_argument('--quiz', action='store_true',
+                       help='Start the PKI knowledge quiz directly')
     args = parser.parse_args()
 
     try:
-        # Non-interactive mode - skip welcome and menu
+        # Non-interactive mode
         if args.scenario:
             run_scenario(args.scenario, non_interactive=True)
+            return
+        elif args.quiz:
+            quiz = QuizManager()
+            quiz.run_quiz(non_interactive=True)
             return
 
         # Interactive mode
         show_welcome()
         while True:
             choice = show_menu()
-            if choice == "6":
+            if choice == "7":
                 console.print("\n[bold green]Thank you for using the CA Certificate Learning Tool![/bold green]")
                 break
-            run_scenario(choice)
+            elif choice == "6":
+                quiz = QuizManager()
+                quiz.run_quiz(non_interactive=False)
+            else:
+                run_scenario(choice)
 
     except KeyboardInterrupt:
         console.print("\n[bold yellow]Program terminated by user.[/bold yellow]")
