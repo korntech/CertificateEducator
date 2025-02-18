@@ -1,33 +1,3 @@
-Root CA
-┌────────────────────────────────────────┐
-│ Subject: Root CA                        │
-│ Issuer: Root CA                         │
-│ Valid From: 2025-02-18                  │
-│ Valid To: 2035-02-16                    │
-│ Type: Root                              │
-└────────────────────────────────────────┘
-         ▲
-         │
-Intermediate CA
-┌────────────────────────────────────────┐
-│ Subject: Intermediate CA                │
-│ Issuer: Root CA                         │
-│ Valid From: 2025-02-18                  │
-│ Valid To: 2027-02-18                    │
-│ Type: Intermediate                      │
-└────────────────────────────────────────┘
-         ▲
-         │
-example.com
-┌────────────────────────────────────────┐
-│ Subject: example.com                    │
-│ Issuer: Intermediate CA                 │
-│ Valid From: 2025-02-18                  │
-│ Valid To: 2026-02-18                    │
-│ Type: Leaf                              │
-└────────────────────────────────────────┘
-```
-
 ### Broken Chain Example
 ```
 Root CA
@@ -69,9 +39,10 @@ Run the tool with full interactive interface:
 ```bash
 python cert_game.py
 ```
+Then select option 6 to start the quiz mode.
 
 ### Non-interactive Mode
-Run specific scenarios directly:
+Run specific scenarios or quiz directly:
 ```bash
 # Run basic valid chain scenario
 python cert_game.py --scenario 1
@@ -84,6 +55,12 @@ python cert_game.py --scenario 3
 
 # Run trust server certificate demo
 python cert_game.py --scenario 4
+
+# Run man-in-the-middle attack demo
+python cert_game.py --scenario 5
+
+# Start the PKI knowledge quiz
+python cert_game.py --quiz
 ```
 
 ## Available Scenarios 📚
@@ -118,6 +95,13 @@ This tool helps users understand:
 - Security implications of different configurations
 - Best practices for certificate management
 
+### Interactive Quiz Mode 📝
+Test your PKI knowledge with our built-in quiz feature:
+- Multiple-choice questions covering key PKI concepts
+- Immediate feedback and explanations
+- Score tracking and performance assessment
+- Interactive learning experience
+
 ## Technical Details 🛠️
 
 - Built with Python 3.x
@@ -130,5 +114,6 @@ This tool helps users understand:
 ├── modules/
 │   ├── certificate.py    # Core certificate logic
 │   ├── scenarios.py      # Different certificate scenarios
-│   └── visualizer.py     # Chain visualization
+│   ├── visualizer.py     # Chain visualization
+│   └── quiz.py          # PKI knowledge quiz module
 └── cert_game.py          # Main application
