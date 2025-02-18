@@ -71,6 +71,39 @@ class QuizManager:
                 },
                 "c",
                 "Certificate chain validation involves checking the trust path from a leaf certificate back to a trusted root certificate, ensuring each certificate was issued by its parent."
+            ),
+            Question(
+                "Which component signs an Intermediate CA certificate?",
+                {
+                    "a": "The leaf certificate",
+                    "b": "Another Intermediate CA",
+                    "c": "The Root CA",
+                    "d": "The web server"
+                },
+                "c",
+                "Intermediate CA certificates are signed by the Root CA, establishing the chain of trust from the root to the leaf certificates."
+            ),
+            Question(
+                "What is a common cause of certificate chain errors?",
+                {
+                    "a": "Using HTTPS instead of HTTP",
+                    "b": "Missing intermediate certificates",
+                    "c": "Network being too fast",
+                    "d": "Having too many certificates"
+                },
+                "b",
+                "Missing intermediate certificates break the chain of trust because browsers can't verify the path from the leaf certificate to a trusted root CA."
+            ),
+            Question(
+                "How can you prevent man-in-the-middle attacks?",
+                {
+                    "a": "Use faster internet connections",
+                    "b": "Always validate the full certificate chain",
+                    "c": "Disable HTTPS entirely",
+                    "d": "Use shorter passwords"
+                },
+                "b",
+                "Proper certificate chain validation is crucial for preventing man-in-the-middle attacks by ensuring the authenticity of certificates."
             )
         ]
         self.score = 0

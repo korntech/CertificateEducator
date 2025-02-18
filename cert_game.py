@@ -12,15 +12,13 @@ console = Console()
 
 def show_welcome():
     ascii_art = """[bold green]
-    ╔═══════════════════════════════════════════════╗
-    ║  [bold red]🔒 CERTIFICATE AUTHORITY LEARNING TOOL 🔒[/bold red]  ║
-    ╠═══════════════════════════════════════════════╣
-    ║     [cyan]┌─────────┐[/cyan]     [yellow]SECURE[/yellow]     [cyan]┌─────────┐[/cyan]     ║
-    ║     [cyan]│ R00T CA │[/cyan]  [yellow]>>VERIFY>>[/yellow]  [cyan]│  LEAF   │[/cyan]     ║
-    ║     [cyan]└─────────┘[/cyan]     [yellow]TRUST[/yellow]     [cyan]└─────────┘[/cyan]     ║
-    ║                                               ║
-    ║     [bold blue]< Learn • Verify • Secure >[/bold blue]        ║
-    ╚═══════════════════════════════════════════════╝[/bold green]
+     🔒 CERTIFICATE AUTHORITY LEARNING TOOL 🔒
+
+    [cyan]ROOT CA[/cyan]    [yellow]SECURE[/yellow]    [cyan]LEAF[/cyan]
+           [yellow]>>VERIFY>>[/yellow]
+             [yellow]TRUST[/yellow]
+
+    < Learn • Verify • Secure >
     """
     welcome_text = """
     Welcome to the Certificate Authority (CA) Learning Tool!
